@@ -1,0 +1,17 @@
+#image-container {
+    display: grid;
+    gap: 10px;
+    grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+}
+img {
+    width: 100px;
+    height: 100px;
+    cursor: pointer;
+    border: 2px solid transparent;
+}
+img.correct {
+    border-color: green;
+}
+img.wrong {
+    border-color: red;
+}
