@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Detective DEEP - Digital Evidence Examination Protocol</title>
+    
+    <!-- Primary Meta Tags -->
+    <meta name="title" content="Detective DEEP - Digital Evidence Examination Protocol">
+    <meta name="description" content="Learn to detect deepfake images through an interactive game and educational experience">
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/x-icon" href="favicon.ico">
+    <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
+    <link rel="manifest" href="site.webmanifest">
+    
+    <!-- Theme Color -->
+    <meta name="theme-color" content="#00ffff">
+    
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://detective-deep.com/">
+    <meta property="og:title" content="Detective DEEP - Digital Evidence Examination Protocol">
+    <meta property="og:description" content="Learn to detect deepfake images through an interactive game and educational experience">
+    <meta property="og:image" content="https://detective-deep.com/images/og-image.png">
+    
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="https://detective-deep.com/">
+    <meta property="twitter:title" content="Detective DEEP - Digital Evidence Examination Protocol">
+    <meta property="twitter:description" content="Learn to detect deepfake images through an interactive game and educational experience">
+    <meta property="twitter:image" content="https://detective-deep.com/images/og-image.png">
+    
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="header-content">
+                <div class="header-buttons">
+                    <button id="home-button" class="home-button" onclick="showHome()" style="display: none;">
+                        <i class="fas fa-home"></i>
+                        Home
+                    </button>
+                </div>
+                <div class="user-profile" id="user-profile" style="display: none;">
+                    <div class="profile-dropdown">
+                        <button class="profile-btn">
+                            <i class="fas fa-user"></i>
+                            <span id="display-username"></span>
+                            <i class="fas fa-chevron-down"></i>
+                        </button>
+                        <div class="dropdown-content">
+                            <button onclick="logout()" class="dropdown-item">
+                                <i class="fas fa-sign-out-alt"></i>
+                                Logout
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <main>
+            <div id="home-section" class="section active">
+                <div class="home-content">
+                    <h1 class="home-title">Detective D.E.E.P</h1>
+                    <p class="home-subtitle">Digital Evidence Examination Protocol</p>
+                    <button class="play-btn" onclick="showGame()">
+                        <i class="fas fa-play"></i>
+                        Play Game
+                    </button>
+                    <div class="home-nav">
+                        <button class="home-nav-btn" onclick="showEducation()">
+                            <i class="fas fa-book"></i>
+                            Learn
+                        </button>
+                        <button class="home-nav-btn" onclick="showLeaderboard()">
+                            <i class="fas fa-trophy"></i>
+                            Leaderboard
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <div id="login-section" class="section">
+                <div class="auth-container">
+                    <div class="auth-header">
+                        <h2>Welcome Back, Detective!</h2>
+                        <p class="auth-subtitle">Sign in to continue your investigation</p>
+                    </div>
+                    <form id="login-form" class="auth-form">
+                        <div class="form-group">
+                            <label for="username">Username</label>
+                            <input type="text" id="username" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="password">Password</label>
+                            <input type="password" id="password" required>
+                        </div>
+                        <div class="auth-actions">
+                            <button type="submit" class="btn auth-btn">Sign In</button>
+                            <button type="button" class="btn secondary auth-btn" onclick="showRegister()">Create Account</button>
+                            <button type="button" class="btn guest auth-btn" onclick="startAsGuest()">Continue as Guest</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <div id="register-section" class="section">
+                <div class="auth-container">
+                    <div class="auth-header">
+                        <h2>Join the Investigation</h2>
+                        <p class="auth-subtitle">Create your detective account</p>
+                    </div>
+                    <form id="register-form" class="auth-form">
+                        <div class="form-group">
+                            <label for="new-username">Username</label>
+                            <input type="text" id="new-username" required minlength="3" maxlength="20">
+                            <small class="form-text">3-20 characters, letters and numbers only</small>
+                        </div>
+                        <div class="form-group">
+                            <label for="new-password">Password</label>
+                            <input type="password" id="new-password" required minlength="10">
+                            <small class="form-text">Must be at least 10 characters and include:</small>
+                            <ul class="password-requirements">
+                                <li id="req-length">At least 10 characters</li>
+                                <li id="req-uppercase">One uppercase letter</li>
+                                <li id="req-lowercase">One lowercase letter</li>
+                                <li id="req-number">One number</li>
+                                <li id="req-special">One special character (!@#$%^&*)</li>
+                            </ul>
+                        </div>
+                        <div class="form-group">
+                            <label for="confirm-password">Confirm Password</label>
+                            <input type="password" id="confirm-password" required>
+                        </div>
+                        <div class="form-group">
+                            <div class="captcha-container">
+                                <label>Prove you're not a robot:</label>
+                                <div class="captcha-box">
+                                    <span id="captcha-text"></span>
+                                    <button type="button" id="refresh-captcha" class="refresh-btn">
+                                        <i class="fas fa-sync-alt"></i>
+                                    </button>
+                                </div>
+                                <input type="text" id="captcha-input" required placeholder="Enter the code above">
+                            </div>
+                        </div>
+                        <button type="submit" class="btn">Register</button>
+                        <button type="button" class="btn secondary" onclick="showLogin()">Back to Login</button>
+                    </form>
+                </div>
+            </div>
+
+            <div id="game-section" class="section">
+                <div class="game-header">
+                    <h2>Deepfake Detection Challenge</h2>
+                    <div class="score">Score: <span id="score">0</span></div>
+                </div>
+                <div class="question-container">
+                    <p id="question-text">Question text will appear here</p>
+                    <div class="options-container">
+                        <!-- Options will be dynamically added here -->
+                    </div>
+                </div>
+                <div class="feedback" id="feedback"></div>
+            </div>
+
+            <div id="education-section" class="section">
+                <div class="education-page active" id="intro-page">
+                    <h2><i class="fas fa-user-secret"></i> What are Deepfake Images?</h2>
+                    <div class="education-content">
+                        <div class="intro-text">
+                            <p>Deepfake images are manipulated photographs that appear real but contain artificial elements. They can range from subtle face swaps to completely synthetic images.</p>
+                            <p>By learning to spot visual inconsistencies, you can better identify these manipulated images.</p>
+                        </div>
+                        <div class="navigation-buttons">
+                            <button class="btn" onclick="nextEducationPage()">Start Learning →</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="education-page" id="overview-page">
+                    <h2><i class="fas fa-book"></i> Visual Detection Guide</h2>
+                    <div class="education-content">
+                        <div class="overview-grid">
+                            <div class="overview-item" onclick="goToPage('facial-page')">
+                                <h3>Facial Features</h3>
+                                <p>Spot inconsistencies in faces and expressions</p>
+                            </div>
+                            <div class="overview-item" onclick="goToPage('background-page')">
+                                <h3>Background & Lighting</h3>
+                                <p>Identify mismatched environments</p>
+                            </div>
+                            <div class="overview-item" onclick="goToPage('artifacts-page')">
+                                <h3>Visual Artifacts</h3>
+                                <p>Recognize signs of digital manipulation</p>
+                            </div>
+                        </div>
+                        <div class="navigation-buttons">
+                            <button class="btn secondary back-btn" onclick="prevEducationPage()">←</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="education-page" id="facial-page">
+                    <h2><i class="fas fa-user"></i> Facial Feature Analysis</h2>
+                    <div class="education-content">
+                        <div class="detail-content">
+                            <div class="image-container">
+                                <img src="images/facial-features.jpg" alt="Facial Features Example" class="education-image">
+                                <div class="image-caption">Example of facial inconsistencies in a deepfake image</div>
+                            </div>
+                            <div class="text-content">
+                                <h3>What to Look For:</h3>
+                                <ul>
+                                    <li>Unnatural skin texture or inconsistent skin tones</li>
+                                    <li>Blurred or distorted features around eyes and mouth</li>
+                                    <li>Inconsistent lighting on different parts of the face</li>
+                                    <li>Unnatural hair details or hair merging with background</li>
+                                    <li>Mismatched facial proportions or symmetry</li>
+                                    <li>Unnatural shadows on the face</li>
+                                </ul>
+                                <p>Look closely at facial features, especially where the face meets the background or hair. Deepfake images often struggle with maintaining consistent details in these areas.</p>
+                            </div>
+                        </div>
+                        <div class="navigation-buttons">
+                            <button class="btn secondary back-btn" onclick="prevEducationPage()">←</button>
+                            <div class="next-btn-container">
+                                <span class="next-page-text">Background & Lighting</span>
+                                <button class="btn secondary next-btn" onclick="nextEducationPage()">→</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="education-page" id="background-page">
+                    <h2><i class="fas fa-lightbulb"></i> Background & Lighting Analysis</h2>
+                    <div class="education-content">
+                        <div class="detail-content">
+                            <div class="image-container">
+                                <img src="images/background.jpg" alt="Background Analysis Example" class="education-image">
+                                <div class="image-caption">Example of background and lighting inconsistencies</div>
+                            </div>
+                            <div class="text-content">
+                                <h3>What to Look For:</h3>
+                                <ul>
+                                    <li>Inconsistent lighting between subject and background</li>
+                                    <li>Unnatural shadows or reflections</li>
+                                    <li>Blurred or distorted background elements</li>
+                                    <li>Artifacts around the subject's edges</li>
+                                    <li>Inconsistent perspective or depth</li>
+                                    <li>Unnatural background textures</li>
+                                </ul>
+                                <p>Pay attention to how the subject interacts with their environment. Look for any inconsistencies in lighting, shadows, or perspective that might indicate manipulation.</p>
+                            </div>
+                        </div>
+                        <div class="navigation-buttons">
+                            <button class="btn secondary back-btn" onclick="prevEducationPage()">←</button>
+                            <div class="next-btn-container">
+                                <span class="next-page-text">Visual Artifacts</span>
+                                <button class="btn secondary next-btn" onclick="nextEducationPage()">→</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="education-page" id="artifacts-page">
+                    <h2><i class="fas fa-search"></i> Visual Artifacts</h2>
+                    <div class="education-content">
+                        <div class="detail-content">
+                            <div class="image-container">
+                                <img src="images/artifacts.jpg" alt="Visual Artifacts Example" class="education-image">
+                                <div class="image-caption">Example of visual artifacts in a deepfake image</div>
+                            </div>
+                            <div class="text-content">
+                                <h3>What to Look For:</h3>
+                                <ul>
+                                    <li>Pixelation or blurring in specific areas</li>
+                                    <li>Unnatural color patterns or gradients</li>
+                                    <li>Inconsistent image quality across different parts</li>
+                                    <li>Strange compression artifacts</li>
+                                    <li>Unnatural sharpness or blur transitions</li>
+                                    <li>Inconsistent noise patterns</li>
+                                </ul>
+                                <p>Look for any unnatural patterns or inconsistencies in the image quality. Deepfake images often have areas where the manipulation becomes visible upon closer inspection.</p>
+                            </div>
+                        </div>
+                        <div class="navigation-buttons">
+                            <button class="btn secondary back-btn" onclick="prevEducationPage()">←</button>
+                            <div class="next-btn-container">
+                                <span class="next-page-text">Done</span>
+                                <button class="btn secondary next-btn" onclick="goToPage('overview-page')">→</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="leaderboard-section" class="section">
+                <h2>Top Detectives</h2>
+                <table id="leaderboard">
+                    <thead>
+                        <tr>
+                            <th>Rank</th>
+                            <th>Username</th>
+                            <th>Score</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- Leaderboard entries will be dynamically added here -->
+                    </tbody>
+                </table>
+            </div>
+        </main>
+
+        <footer>
+            <p class="footer-text">© 2024 Detective DEEP - Digital Evidence Examination Protocol</p>
+        </footer>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html> 
