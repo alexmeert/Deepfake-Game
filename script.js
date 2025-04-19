@@ -413,4 +413,11 @@ function hideAllSections() {
     document.querySelectorAll('.section').forEach(section => {
         section.classList.remove('active');
     });
-} 
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  const title = document.querySelector('.typewriter');
+  setTimeout(() => {
+    title.classList.add('done');
+  }, 3000); // match the duration of typing animation
+});
