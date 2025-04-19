@@ -346,7 +346,12 @@ function loadQuestion() {
 
     const question = questions[currentQuestionIndex];
     questionText.textContent = question.question;
-    
+
+    // Clear previous clue
+    const clueText = document.getElementById('clue-text');
+    clueText.textContent = '';
+    clueText.classList.remove('show');
+
     optionsContainer.innerHTML = '';
     question.options.forEach((option, index) => {
         const optionElement = document.createElement('div');
@@ -356,6 +361,8 @@ function loadQuestion() {
         optionsContainer.appendChild(optionElement);
     });
 }
+
+
 
 function selectOption(optionIndex) {
     const question = questions[currentQuestionIndex];
@@ -421,3 +428,19 @@ document.addEventListener('DOMContentLoaded', () => {
     title.classList.add('done');
   }, 3000); // match the duration of typing animation
 });
+
+
+function showClue() {
+  const clues = [
+    "Look for unnatural skin textures or mismatched lighting.",
+    "Pay attention to the eyes—they're often inconsistent.",
+    "Backgrounds sometimes blur weirdly in deepfakes.",
+    "Hair edges or shadows may appear distorted.",
+    "Facial symmetry can be off—check for weird proportions."
+  ];
+
+  const clue = clues[currentQuestionIndex % clues.length];
+  const clueText = document.getElementById('clue-text');
+  clueText.textContent = clue;
+  clueText.classList.add('show');
+}
