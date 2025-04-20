@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Deepfake Game Test</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .controls {
+            margin-bottom: 20px;
+        }
+        .grid-container {
+            display: grid;
+            gap: 10px;
+            margin-top: 20px;
+        }
+        .grid-item {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+        .grid-item:hover {
+            transform: scale(1.02);
+        }
+        .grid-item.selected {
+            border: 3px solid #4CAF50;
+        }
+        .grid-item.wrong {
+            border: 3px solid #f44336;
+        }
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-right: 10px;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        .loading {
+            display: none;
+            margin: 20px 0;
+        }
+        .result {
+            margin-top: 20px;
+            padding: 10px;
+            border-radius: 4px;
+            display: none;
+        }
+        .result.correct {
+            background-color: #dff0d8;
+            color: #3c763d;
+        }
+        .result.incorrect {
+            background-color: #f2dede;
+            color: #a94442;
+        }
+    </style>
+</head>
+<body>
+    <div class="controls">
+        <h1>Deepfake Game Test</h1>
+        <button onclick="generateImages(1)">Generate Level 1</button>
+        <button onclick="generateImages(6)">Generate Level 6</button>
+        <button onclick="generateImages(10)">Generate Level 10</button>
+    </div>
+    <div class="loading" id="loading">Generating images...</div>
+    <div class="result" id="result"></div>
+    <div class="grid-container" id="gridContainer"></div>
+
+    <script>
+        let currentOriginalIndex = -1;
+        let selectedImageIndex = -1;
+
+        async function generateImages(level) {
+            const loading = document.getElementById('loading');
+            const gridContainer = document.getElementById('gridContainer');
+            const result = document.getElementById('result');
+            
+            // Reset state
+            result.style.display = 'none';
+            selectedImageIndex = -1;
+            
+            // Show loading state
+            loading.style.display = 'block';
+            gridContainer.innerHTML = '';
+            
+            try {
+                const response = await fetch(`http://localhost:8000/generate?level=${level}`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    }
+                });
+
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+
+                const data = await response.json();
+                
+                // Store the original image index
+                currentOriginalIndex = data.original_index;
+                
+                // Set up grid layout
+                gridContainer.style.gridTemplateColumns = `repeat(${data.grid_size}, 1fr)`;
+                
+                // Create and append images
+                data.images.forEach((base64Image, index) => {
+                    const img = document.createElement('img');
+                    img.src = `data:image/png;base64,${base64Image}`;
+                    img.className = 'grid-item';
+                    img.alt = `Image ${index + 1}`;
+                    img.onclick = () => selectImage(index);
+                    gridContainer.appendChild(img);
+                });
+            } catch (error) {
+                console.error('Error:', error);
+                gridContainer.innerHTML = `<p style="color: red;">Error: ${error.message}</p>`;
+            } finally {
+                loading.style.display = 'none';
+            }
+        }
+
+        function selectImage(index) {
+            const result = document.getElementById('result');
+            const images = document.querySelectorAll('.grid-item');
+            
+            // Remove previous selection
+            if (selectedImageIndex !== -1) {
+                images[selectedImageIndex].classList.remove('selected', 'wrong');
+            }
+            
+            // Update selection
+            selectedImageIndex = index;
+            images[index].classList.add('selected');
+            
+            // Check if correct
+            if (index === currentOriginalIndex) {
+                result.textContent = 'Correct! You found the real image!';
+                result.className = 'result correct';
+                images[index].classList.add('selected');
+            } else {
+                result.textContent = 'Incorrect! Try again.';
+                result.className = 'result incorrect';
+                images[index].classList.add('wrong');
+                // Show the correct image
+                images[currentOriginalIndex].classList.add('selected');
+            }
+            
+            result.style.display = 'block';
+        }
+    </script>
+</body>
+</html> 
