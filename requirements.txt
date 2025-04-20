@@ -3,3 +3,9 @@ torch
 accelerate
 transformers
 hf_xet
+# torchvision
+# torchaudio 
+# --index-url https://download.pytorch.org/whl/cu118
+fastapi
+uvicorn
+
