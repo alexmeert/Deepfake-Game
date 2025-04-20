@@ -2,6 +2,10 @@
 let currentUser = null;
 let score = 0;
 let currentQuestionIndex = 0;
+let currentLevel = 1;
+let currentImages = null;
+let nextLevelImages = null;
+let isPreloading = false;
 
 // sample questions
 const questions = [
@@ -331,11 +335,104 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 // game logic
-function startGame() {
-    score = 0;
-    currentQuestionIndex = 0;
-    updateScore();
-    loadQuestion();
+function showLoadingScreen() {
+    document.querySelector('.loading-screen').classList.remove('hidden');
+}
+
+function hideLoadingScreen() {
+    document.querySelector('.loading-screen').classList.add('hidden');
+}
+
+function updateProgress(percent) {
+    const fill = document.querySelector('.progress-fill');
+    const text = document.querySelector('.progress-text');
+    fill.style.width = `${percent}%`;
+    text.textContent = `${percent}%`;
+}
+
+async function loadLevel(level) {
+    showLoadingScreen();
+    updateProgress(0);
+    
+    try {
+        const response = await fetch('/generate', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ level })
+        });
+        
+        if (!response.ok) {
+            throw new Error('Failed to load level');
+        }
+        
+        const data = await response.json();
+        currentImages = data.images;
+        
+        // Update progress to 100% when level is loaded
+        updateProgress(100);
+        
+        // Start preloading next level
+        preloadNextLevel(level + 1);
+        
+        return data;
+    } catch (error) {
+        console.error('Error loading level:', error);
+        throw error;
+    } finally {
+        // Hide loading screen after a short delay to show 100%
+        setTimeout(hideLoadingScreen, 500);
+    }
+}
+
+async function preloadNextLevel(level) {
+    if (isPreloading) return;
+    isPreloading = true;
+    
+    try {
+        const response = await fetch('/generate', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ level })
+        });
+        
+        if (!response.ok) {
+            throw new Error('Failed to preload level');
+        }
+        
+        const data = await response.json();
+        nextLevelImages = data.images;
+    } catch (error) {
+        console.error('Error preloading level:', error);
+    } finally {
+        isPreloading = false;
+    }
+}
+
+async function startGame() {
+    currentLevel = 1;
+    await loadLevel(currentLevel);
+    // Initialize game grid with currentImages
+    initializeGameGrid();
+}
+
+async function nextLevel() {
+    currentLevel++;
+    if (nextLevelImages) {
+        // Use preloaded images
+        currentImages = nextLevelImages;
+        nextLevelImages = null;
+        initializeGameGrid();
+        // Start preloading next level
+        preloadNextLevel(currentLevel + 1);
+    } else {
+        // Load level normally if preloading failed
+        await loadLevel(currentLevel);
+        initializeGameGrid();
+    }
 }
 
 function loadQuestion() {
@@ -361,8 +458,6 @@ function loadQuestion() {
         optionsContainer.appendChild(optionElement);
     });
 }
-
-
 
 function selectOption(optionIndex) {
     const question = questions[currentQuestionIndex];
@@ -428,7 +523,6 @@ document.addEventListener('DOMContentLoaded', () => {
     title.classList.add('done');
   }, 3000); // match the duration of typing animation
 });
-
 
 function showClue() {
   const clues = [
