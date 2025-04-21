@@ -47,7 +47,7 @@ def image_to_base64(image):
 
 def generate_deepfakes(origin_image_path, strength, num_images=3):
     random_prompts = random.sample(prompts, num_images)  # initialize random prompts to switch some things up
-    original_image = Image.open(origin_image_path)# gather original image
+    original_image = Image.open(origin_image_path).resize((512, 512))# gather original image
 
     # generate deepfakes based on images, determine about to generate + what strength
     deepfakes = []

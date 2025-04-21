@@ -41,6 +41,9 @@
         <header>
             <div class="header-content">
                 <div class="header-buttons">
+                    <button id="theme-toggle" class="theme-toggle" onclick="toggleTheme()">
+                        <i class="fas fa-sun"></i>
+                    </button>
                     <button id="home-button" class="home-button" onclick="showHome()" style="display: none;">
                         <i class="fas fa-home"></i>
                         Home
@@ -169,19 +172,42 @@
                 <div class="game-container">
                     <div class="game-header">
                         <h2>Deepfake Detection Challenge</h2>
-                        <div class="score">Score: <span id="score">0</span></div>
-                    </div>
-                    <div class="question-container">
-                        <p id="question-text">Question text will appear here</p>
-                        <div class="options-container">
-                            <!-- Options will be dynamically added here -->
-                        </div>
-                        <div class="clue-container">
-                            <button class="btn secondary clue-btn" onclick="showClue()">Need a Clue?</button>
-                            <p id="clue-text" class="clue-text"></p>
+                        <div class="game-stats">
+                            <div class="score">Score: <span id="score">0</span></div>
+                            <div class="level">Level: <span id="current-level">1</span></div>
                         </div>
                     </div>
-                    <div class="feedback" id="feedback"></div>
+                    <div class="grid-wrapper">
+                        <div class="grid-container" id="gridContainer"></div>
+                    </div>
+                    <div class="clue-container">
+                        <button class="btn secondary clue-btn" onclick="showClue()">Need a Clue?</button>
+                        <p id="clue-text" class="clue-text"></p>
+                    </div>
+                </div>
+            </div>
+
+            <div id="game-over-section" class="section">
+                <div class="game-over-container">
+                    <h2 class="game-over-title">Game Over</h2>
+                    <div class="final-stats">
+                        <div class="stat-item">
+                            <span class="stat-label">Final Score:</span>
+                            <span class="stat-value" id="final-score">0</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-label">Level Reached:</span>
+                            <span class="stat-value" id="final-level">1</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-label">Correct Answers:</span>
+                            <span class="stat-value" id="correct-answers">0</span>
+                        </div>
+                    </div>
+                    <div class="game-over-actions">
+                        <button class="btn" onclick="showLeaderboard()">View Leaderboard</button>
+                        <button class="btn secondary" onclick="startGame()">Play Again</button>
+                    </div>
                 </div>
             </div>
 
@@ -317,24 +343,46 @@
             </div>
 
             <div id="leaderboard-section" class="section">
-                <h2>Top Detectives</h2>
-                <table id="leaderboard">
-                    <thead>
-                        <tr>
-                            <th>Rank</th>
-                            <th>Username</th>
-                            <th>Score</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <!-- Leaderboard entries will be dynamically added here -->
-                    </tbody>
-                </table>
+                <div class="leaderboard-container">
+                    <h2>Leaderboard</h2>
+                    <table class="leaderboard-table">
+                        <thead>
+                            <tr>
+                                <th class="rank">Rank</th>
+                                <th class="username">Username</th>
+                                <th class="score">Score</th>
+                                <th class="level">Level</th>
+                            </tr>
+                        </thead>
+                        <tbody id="leaderboard-body">
+                        </tbody>
+                    </table>
+                    <div id="user-rank-display" class="user-rank-display" style="display: none;">
+                        <h3>Your Rank</h3>
+                        <div class="user-rank-stats">
+                            <div class="user-rank-stat">
+                                <span class="label">Rank</span>
+                                <span class="value" id="user-rank">-</span>
+                            </div>
+                            <div class="user-rank-stat">
+                                <span class="label">Score</span>
+                                <span class="value" id="user-score">-</span>
+                            </div>
+                            <div class="user-rank-stat">
+                                <span class="label">Level</span>
+                                <span class="value" id="user-level">-</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="leaderboard-actions">
+                        <button onclick="showHome()" class="btn btn-secondary">Back to Home</button>
+                    </div>
+                </div>
             </div>
         </main>
 
         <footer>
-            <p class="footer-text">© 2024 Detective DEEP - Digital Evidence Examination Protocol</p>
+            <p class="footer-text">CEN4033.02 Secure Software Engineering - Educational Deepfake Detection Game</p>
         </footer>
     </div>
     <script src="script.js"></script>
