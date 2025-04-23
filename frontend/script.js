@@ -54,24 +54,24 @@ function showGame() {
     document.getElementById('user-profile').style.display = 'block';
     document.getElementById('home-button').style.display = 'flex';
     
-    // Reset game state
+    // reset game state
     score = 0;
     currentLevel = 1;
     correctAnswers = 0;
     updateScore();
     updateLevelDisplay();
     
-    // Ensure game over section is hidden
+    // ensure game over section is hidden
     document.getElementById('game-over-section').classList.remove('active');
     
-    // Start the game   
+    // start the game   
     startGame();
 }
 
 function showEducation() {
     hideAllSections();
     document.getElementById('education-section').classList.add('active');
-    // Reset to intro page when entering education section
+    // reset to intro page when entering education section
     currentEducationPage = educationPages.indexOf('intro-page');
     updateEducationPages();
     document.getElementById('user-profile').style.display = 'block';
@@ -84,7 +84,7 @@ function showLeaderboard() {
     document.getElementById('user-profile').style.display = 'block';
     document.getElementById('home-button').style.display = 'flex';
     
-    // Check if cache is stale or doesn't exist
+    // check if cache is stale or doesn't exist
     const now = Date.now();
     if (!leaderboardCache || (now - lastLeaderboardUpdate) > LEADERBOARD_CACHE_DURATION) {
         preloadLeaderboard();
@@ -94,9 +94,9 @@ function showLeaderboard() {
 }
 
 function logout() {
-    // Clear any user data
+    // clear any user data
     localStorage.removeItem('username');
-    // Return to login screen
+    // return to login screen
     showLogin();
 }
 
@@ -112,12 +112,12 @@ const educationPages = [
 let currentEducationPage = 0;
 
 function updateEducationPages() {
-    // First hide all education pages
+    // first hide all education pages
     document.querySelectorAll('.education-page').forEach(page => {
         page.classList.remove('active');
     });
     
-    // Then show the current page
+    // then show the current page
     const currentPage = document.getElementById(educationPages[currentEducationPage]);
     if (currentPage) {
         currentPage.classList.add('active');
@@ -129,7 +129,7 @@ function nextEducationPage() {
         currentEducationPage++;
         updateEducationPages();
     } else {
-        // If we're at the last page, go back to overview
+        // if we're at the last page, go back to overview
         currentEducationPage = educationPages.indexOf('overview-page');
         updateEducationPages();
     }
@@ -266,7 +266,7 @@ function updateCaptcha() {
     document.getElementById('captcha-text').textContent = currentCaptcha;
 }
 
-// Initialize captcha
+// initialize captcha
 document.addEventListener('DOMContentLoaded', function() {
     updateCaptcha();
     document.getElementById('refresh-captcha').addEventListener('click', updateCaptcha);
@@ -439,7 +439,7 @@ async function loadLevel(level) {
             throw new Error(`HTTP error! status: ${response.status}`);
         }
 
-        // Simulate progress updates while waiting for response
+        // simulate progress updates while waiting for response
         let progress = 0;
         const progressInterval = setInterval(() => {
             progress = Math.min(progress + 5, 90);
@@ -451,13 +451,13 @@ async function loadLevel(level) {
         
         currentOriginalIndex = data.original_index;
         
-        // Initialize the grid with the loaded images
+        // initialize the grid with the loaded images
         initializeGameGrid(data.images, data.grid_size);
         
-        // Update progress to 100% when level is loaded
+        // update progress to 100% when level is loaded
         updateProgress(100);
         
-        // Start preloading next level
+        // start preloading next level
         preloadNextLevel(level + 1);
         
         // wait for images to be visible before starting timer
@@ -506,7 +506,7 @@ async function startGame() {
     updateScore();
     updateLevelDisplay();
     
-    // Ensure game over section is hidden
+    // ensure game over section is hidden
     document.getElementById('game-over-section').classList.remove('active');
     document.getElementById('game-section').classList.add('active');
     
@@ -526,7 +526,7 @@ async function nextLevel() {
             throw new Error(`HTTP error! status: ${response.status}`);
         }
 
-        // Simulate progress updates while waiting for response
+        // simulate progress updates while waiting for response
         let progress = 0;
         const progressInterval = setInterval(() => {
             progress = Math.min(progress + 5, 90);
@@ -538,16 +538,16 @@ async function nextLevel() {
         
         currentOriginalIndex = data.original_index;
         
-        // Initialize the grid with the loaded images
+        // initialize the grid with the loaded images
         initializeGameGrid(data.images, data.grid_size);
         
-        // Update progress to 100% when level is loaded
+        // update progress to 100% when level is loaded
         updateProgress(100);
         
-        // Start preloading next level
+        // start preloading next level
         preloadNextLevel(currentLevel + 1);
         
-        // Record start time for scoring AFTER images are visible
+        // record start time for scoring AFTER images are visible
         levelStartTime = Date.now();
         
         return data;
@@ -559,29 +559,6 @@ async function nextLevel() {
     }
 }
 
-function loadQuestion() {
-    if (currentQuestionIndex >= questions.length) {
-        endGame();
-        return;
-    }
-
-    const question = questions[currentQuestionIndex];
-    questionText.textContent = question.question;
-
-    // Clear previous clue
-    const clueText = document.getElementById('clue-text');
-    clueText.textContent = '';
-    clueText.classList.remove('show');
-
-    optionsContainer.innerHTML = '';
-    question.options.forEach((option, index) => {
-        const optionElement = document.createElement('div');
-        optionElement.className = 'option';
-        optionElement.textContent = option.text;
-        optionElement.onclick = () => selectOption(index);
-        optionsContainer.appendChild(optionElement);
-    });
-}
 
 function selectOption(optionIndex) {
     const question = questions[currentQuestionIndex];
@@ -661,13 +638,13 @@ function showClue() {
 function initializeGameGrid(images, gridSize) {
     const gridContainer = document.getElementById('gridContainer');
     
-    // Clear previous grid
+    // clear previous grid
     gridContainer.innerHTML = '';
     
-    // Set up grid layout
+    // set up grid layout
     gridContainer.style.gridTemplateColumns = `repeat(${gridSize}, 1fr)`;
     
-    // Create and append images
+    // create and append images
     images.forEach((base64Image, index) => {
         const img = document.createElement('img');
         img.src = `data:image/png;base64,${base64Image}`;
@@ -679,16 +656,16 @@ function initializeGameGrid(images, gridSize) {
 }
 
 async function showGameOver() {
-    // Hide game section and show game over section
+    // hide game section and show game over section
     document.getElementById('game-section').classList.remove('active');
     document.getElementById('game-over-section').classList.add('active');
     
-    // Update final stats display
+    // update final stats display
     document.getElementById('final-score').textContent = score;
     document.getElementById('final-level').textContent = currentLevel;
     document.getElementById('correct-answers').textContent = correctAnswers;
     
-    // Update database with final stats
+    // update database with final stats
     const username = localStorage.getItem('username');
     if (username && username !== 'Guest') {
         try {

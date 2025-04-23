@@ -392,7 +392,6 @@ th {
     }
 }
 
-/* Education Section Styles */
 .education-page {
     display: none;
     animation: fadeIn 0.5s ease-in-out;
@@ -572,7 +571,6 @@ th {
     transform: translateX(2px);
 }
 
-/* Responsive Design */
 @media (max-width: 768px) {
     .detail-content {
         grid-template-columns: 1fr;
@@ -594,7 +592,6 @@ th {
     }
 }
 
-/* Education Section Styles */
 .education-content {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
@@ -655,7 +652,6 @@ th {
     color: #ccc;
 }
 
-/* Add education button to navigation */
 .nav-btn.education {
     background-color: var(--secondary-color);
 }
@@ -817,7 +813,6 @@ footer {
 .strength-4 { background-color: #8bc34a; color: white; }
 .strength-5 { background-color: #4caf50; color: white; }
 
-/* Add animation for requirement updates */
 @keyframes requirementUpdate {
     0% { transform: scale(1); }
     50% { transform: scale(1.05); }
@@ -912,7 +907,6 @@ footer {
     text-align: center;
 }
 
-/* Login form specific styles */
 #login-section .auth-container {
     max-width: 350px;
 }
@@ -925,7 +919,6 @@ footer {
     margin-top: 2rem;
 }
 
-/* Register form specific styles */
 #register-section .auth-container {
     max-width: 500px;
 }
@@ -954,7 +947,6 @@ footer {
     margin-right: 0;
 }
 
-/* Responsive adjustments */
 @media (max-width: 600px) {
     .auth-container {
         padding: 1.5rem;
@@ -1217,7 +1209,6 @@ footer {
     text-shadow: 0 0 10px var(--primary-color);
 }
 
-/* Grid Styles */
 .grid-wrapper {
     width: 100%;
     padding: 1rem;
@@ -1291,7 +1282,6 @@ footer {
     border: 1px solid var(--error-color);
 }
 
-/* Responsive Grid */
 @media (max-width: 768px) {
     .grid-container {
         gap: 1rem;
@@ -1445,7 +1435,6 @@ main {
     min-height: 100vh;
 }
 
-/* Update specific elements that use dark gray in light mode */
 [data-theme="light"] .btn.secondary {
     background-color: #f0f0f0;
     color: var(--primary-color);

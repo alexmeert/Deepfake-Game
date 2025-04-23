@@ -19,7 +19,6 @@ class Database:
 
     def create_user(self, username, password):
         try:
-            # Hash the password
             hashed = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt())
             
             self.cur.execute(
@@ -34,9 +33,10 @@ class Database:
             print(f"Error creating user: {e}")
             return False
 
+
     def verify_user(self, username, password):
         try:
-            # First check if user exists
+            # first check if user exists
             self.cur.execute(
                 "SELECT password_hash FROM users WHERE username = %s",
                 (username,)
@@ -47,11 +47,11 @@ class Database:
                 print(f"User {username} not found")
                 return False
             
-            # If password is empty (for token verification), just check if user exists
+            # if password is empty (for token verification), just check if user exists
             if not password:
                 return True
             
-            # Verify password
+            # verify password
             stored_hash = result['password_hash'].encode('utf-8')
             provided_password = password.encode('utf-8')
             
@@ -65,9 +65,10 @@ class Database:
             print(f"Error verifying user {username}: {e}")
             return False
 
+
     def update_user_stats(self, username, score, level, is_correct):
         try:
-            # First verify the user exists
+            # first verify the user exists
             self.cur.execute(
                 "SELECT id FROM users WHERE username = %s",
                 (username,)
@@ -76,14 +77,14 @@ class Database:
                 print(f"User {username} not found")
                 return False
 
-            # Update the stats
+            # update the stats
             self.cur.execute(
                 "SELECT update_user_stats(%s, %s, %s, %s)",
                 (username, score, level, is_correct)
             )
             self.conn.commit()
             
-            # Verify the update worked
+            # verify the update worked
             self.cur.execute(
                 "SELECT highest_score, highest_level FROM users WHERE username = %s",
                 (username,)
@@ -100,7 +101,7 @@ class Database:
 
     def get_leaderboard(self, username=None):
         try:
-            # Get top 10 users
+            # get top 10 users
             self.cur.execute("""
                 SELECT username, highest_score, highest_level
                 FROM users
@@ -109,7 +110,7 @@ class Database:
             """)
             top_10 = self.cur.fetchall()
 
-            # Get user's rank if username is provided
+            # get user's rank if username is provided
             user_rank = None
             if username:
                 self.cur.execute("""
